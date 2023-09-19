@@ -16,7 +16,7 @@ https://github.com/JulianCasillasP/Sellit_Server
 El proyecto utiliza dos modelos principales para gestionar los datos:
 
 1. **Artículo**
-
+```js
 const articleSchema = new Schema({
   name: { type: String, required: true },
   description: { type: String, required: true },
@@ -24,10 +24,10 @@ const articleSchema = new Schema({
   condition: { type: String, required: true },
   seller: { type: Schema.Types.ObjectId, ref: 'User', required: true },
 });
-
+```
 
 2. **Usuario**
-
+```js
    const usuarioSchema = new Schema({
   username: { type: String, required: true },
   email: { type: String, unique: true, required: true },
@@ -35,7 +35,7 @@ const articleSchema = new Schema({
   orders: [{ type: Schema.Types.ObjectId, ref: 'Orden' }],
   isAdmin: { type: Boolean, default: false },
 });
-
+```
 
 ## user roles
 
