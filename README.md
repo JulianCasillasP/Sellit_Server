@@ -8,8 +8,9 @@ Este proyecto de Venta de Artículos Usados es una aplicación web que permite a
 
 Este proyecto se divide en dos repositorios separados:
 
-- https://github.com/JulianCasillasP/Sellit_Client
-- https://github.com/JulianCasillasP/Sellit_Server
+ https://github.com/JulianCasillasP/Sellit_Client
+
+ https://github.com/JulianCasillasP/Sellit_Server
 
 ## Modelos
 
