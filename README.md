@@ -17,12 +17,12 @@ El proyecto utiliza dos modelos principales para gestionar los datos:
 
 1. **Artículo**
 
-const articuloSchema = new Schema({
-  nombre: { type: String, required: true },
-  descripcion: { type: String, required: true },
-  precio: { type: Number, required: true },
-  estado: { type: String, required: true },
-  vendedor: { type: Schema.Types.ObjectId, ref: 'Usuario', required: true },
+const articleSchema = new Schema({
+  name: { type: String, required: true },
+  description: { type: String, required: true },
+  price: { type: Number, required: true },
+  condition: { type: String, required: true },
+  seller: { type: Schema.Types.ObjectId, ref: 'User', required: true },
 });
 
 
@@ -37,50 +37,31 @@ const articuloSchema = new Schema({
 });
 
 
-## Roles de Usuario
+## user roles
 
-El sistema tiene dos roles de usuario:
-
-1. **Usuario (user)**
-   - Los usuarios pueden:
-     - Ver la lista de artículos disponibles.
-     - Publicar nuevos artículos para la venta.
-     - Ver detalles de un artículo específico.
-     - Realizar compras de artículos.
-     - Actualizar su perfil y contraseña.
-
-2. **Administrador (admin)**
-   - Los administradores tienen todos los privilegios de un usuario normal y además pueden:
-     - Gestionar usuarios (crear, actualizar, borrar).
-     - Gestionar artículos (crear, actualizar, borrar).
+| Role  | Capabilities                                           | Property        |
+|-------|-------------------------------------------------------|-----------------|
+| User  | Can login/logout. Can read all the projects. Can create a new order. | isAdmin: false |
+| Admin | Can login/logout. Can read, edit, or delete all the projects. Can create a new project. Can read all user's orders and edit or delete them. | isAdmin: true  |
 
 ## API Reference
 
 La API ofrece los siguientes endpoints y métodos:
 
-| Método | Endpoint                     | Requiere                             | Respuesta (200)              | Acción                         |
-|--------|------------------------------|-------------------------------------|------------------------------|--------------------------------|
-| GET    | `/api/articulos`             | Autenticación de usuario (user)     | Lista de artículos           | Obtener lista de artículos      |
-| GET    | `/api/articulos/:id`         | Autenticación de usuario (user)     | Detalles del artículo        | Obtener detalles de un artículo |
-| POST   | `/api/articulos`             | Autenticación de usuario (user)     | Nuevo artículo creado        | Crear un nuevo artículo         |
-| PUT    | `/api/articulos/:id`         | Autenticación de usuario (user)     | Artículo actualizado         | Actualizar un artículo           |
-| DELETE | `/api/articulos/:id`         | Autenticación de usuario (user)     | Artículo eliminado           | Borrar un artículo               |
-| GET    | `/api/usuarios`              | Autenticación de administrador (admin) | Lista de usuarios           | Obtener lista de usuarios        |
-| GET    | `/api/usuarios/:id`          | Autenticación de administrador (admin) | Detalles del usuario        | Obtener detalles de un usuario   |
-| POST   | `/api/usuarios/signup`       | -                                   | Usuario registrado           | Registrarse como nuevo usuario   |
-| POST   | `/api/usuarios/login`        | -                                   | Autenticación exitosa        | Iniciar sesión                   |
-| POST   | `/api/usuarios/logout`       | Autenticación de usuario (user)     | Cierre de sesión exitoso     | Cerrar sesión                    |
-| PUT    | `/api/usuarios/:id`          | Autenticación de administrador (admin) | Usuario actualizado          | Actualizar un usuario            |
-| DELETE | `/api/usuarios/:id`          | Autenticación de administrador (admin) | Usuario eliminado            | Borrar un usuario                |
+| Method | Endpoint                 | Requires                         | Response (200)          | Action                      |
+|--------|--------------------------|----------------------------------|--------------------------|-----------------------------|
+| GET    | `/articles`              | User authentication (user)        | List of articles         | Get list of articles        |
+| GET    | `/articles/:id`          | User authentication (user)        | Article details          | Get details of an article   |
+| POST   | `/articles`              | User authentication (user)        | New article created      | Create a new article        |
+| PUT    | `/articles/:id`          | User authentication (user)        | Updated article          | Update an article           |
+| DELETE | `/articles/:id`          | User authentication (user)        | Article deleted          | Delete an article           |
+| GET    | `/users`                 | Admin authentication (admin)      | List of users            | Get list of users           |
+| GET    | `/users/:id`             | Admin authentication (admin)      | User details             | Get details of a user       |
+| POST   | `/users/signup`          | -                                | User registered          | Register as a new user      |
+| POST   | `/users/login`           | -                                | Authentication successful | Log in                      |
+| POST   | `/users/logout`          | User authentication (user)        | Logout successful        | Log out                     |
+| PUT    | `/users/:id`             | Admin authentication (admin)      | User updated             | Update a user                |
+| DELETE | `/users/:id`             | Admin authentication (admin)      | User deleted             | Delete a user                |
 
-**Nota:** Asegúrate de proporcionar la documentación completa y detallada de la API, incluyendo los parámetros requeridos y las respuestas posibles para cada endpoint.
 
-## Diseño Responsive
 
-El diseño de la aplicación es completamente responsive, lo que significa que se adapta a diferentes tamaños de pantalla para ofrecer una experiencia óptima tanto en dispositivos móviles como en computadoras de escritorio.
-
-## Mensajes de Error
-
-La aplicación muestra mensajes de error amigables para el usuario en el frontend en caso de que ocurran errores durante la interacción con la API.
-
-¡Gracias por revisar la documentación de nuestro proyecto!
