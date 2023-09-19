@@ -55,13 +55,8 @@ La API ofrece los siguientes endpoints y métodos:
 | POST   | `/articles`              | User authentication (user)        | New article created      | Create a new article        |
 | PUT    | `/articles/:id`          | User authentication (user)        | Updated article          | Update an article           |
 | DELETE | `/articles/:id`          | User authentication (user)        | Article deleted          | Delete an article           |
-| GET    | `/users`                 | Admin authentication (admin)      | List of users            | Get list of users           |
 | GET    | `/users/:id`             | Admin authentication (admin)      | User details             | Get details of a user       |
 | POST   | `/users/signup`          | -                                | User registered          | Register as a new user      |
 | POST   | `/users/login`           | -                                | Authentication successful | Log in                      |
 | POST   | `/users/logout`          | User authentication (user)        | Logout successful        | Log out                     |
-| PUT    | `/users/:id`             | Admin authentication (admin)      | User updated             | Update a user                |
-| DELETE | `/users/:id`             | Admin authentication (admin)      | User deleted             | Delete a user                |
-
-
 
