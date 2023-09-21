@@ -24,17 +24,21 @@ const articleSchema = new Schema({
   price: { type: Number, required: true },
   condition: { type: String, required: true },
   seller: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  category: { type: String, enum: ['clothes', 'shoes', 'jewels', 'electronics'], required: true },
+  imageUrl: { type: String } // Agregar un campo para la URL de la imagen
 });
 ```
 
 2. **User**
 ```js
-   const userSchema = new Schema({
+  const userSchema = new Schema({
   username: { type: String, required: true },
   email: { type: String, unique: true, required: true },
   password: { type: String, required: true },
   orders: [{ type: Schema.Types.ObjectId, ref: 'Orden' }],
   isAdmin: { type: Boolean, default: false },
+  articles: [{ type: Schema.Types.ObjectId, ref: 'Article' }],
+  articleCategories: [{ type: String, enum: ['clothes', 'shoes', 'jewels', 'electronics'] }],
 });
 ```
 
