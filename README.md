@@ -16,7 +16,7 @@ Este proyecto se divide en dos repositorios separados:
 
 El proyecto utiliza dos modelos principales para gestionar los datos:
 
-1. **Artículo**
+1. **Article**
 ```js
 const articleSchema = new Schema({
   name: { type: String, required: true },
@@ -27,7 +27,7 @@ const articleSchema = new Schema({
 });
 ```
 
-2. **Usuario**
+2. **User**
 ```js
    const userSchema = new Schema({
   username: { type: String, required: true },
