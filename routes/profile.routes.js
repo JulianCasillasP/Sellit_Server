@@ -21,7 +21,7 @@ router.get("/:userId", async (req, res, next) => {
     res.json({
       username: user.username,
       email: user.email,
-      articles: articles,
+      articles: user.articles,
     });
   } catch (err) {
     console.error(err);
@@ -30,5 +30,3 @@ router.get("/:userId", async (req, res, next) => {
 });
 
 module.exports = router;
-
-HOLA
