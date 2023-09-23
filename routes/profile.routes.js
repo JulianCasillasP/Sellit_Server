@@ -1,32 +1,40 @@
 const router = require("express").Router();
 const User = require("../models/User.model"); 
-const Article = require("../models/Article.model"); 
+const { isAuthenticated} = require("../middleware/jwt.middleware.js")
 
-// Ruta para ver el perfil de un usuario por su ID
-router.get("/:userId", async (req, res, next) => {
-  try {
-    const { userId } = req.params;
-
-    // Encuentra al usuario por su ID
-    const user = await User.findById(userId);
-
-    if (!user) {
-      return res.status(404).json({ message: "Usuario no encontrado." });
-    }
-
-    // Encuentra los artículos publicados por ese usuario
-    const articles = await Article.find({ seller: userId });
-
-    // Retorna la información del perfil del usuario
-    res.json({
-      username: user.username,
-      email: user.email,
-      articles: user.articles,
+// Ruta para obtener un perfil de usuario por su ID
+router.get("/:id",  isAuthenticated, (req, res) => {
+  const userId = req.params.id;
+  User.findById(userId)
+    .then((user) => {
+      if (!user) {
+        return res.status(404).json({ message: "Usuario no encontrado" });
+      }
+      res.json(user);
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).json({ message: "Error al obtener el perfil de usuario" });
     });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Error al obtener el perfil del usuario." });
-  }
+});
+
+
+// Ruta para actualizar el perfil de usuario por su ID
+router.put("/:id",  isAuthenticated, (req, res) => {
+  const userId = req.params.id;
+  const updatedUserData = req.body; // Supongamos que el cuerpo de la solicitud contiene los nuevos datos del usuario
+
+  User.findByIdAndUpdate(userId, updatedUserData, { new: true })
+    .then((updatedUser) => {
+      if (!updatedUser) {
+        return res.status(404).json({ message: "Usuario no encontrado" });
+      }
+      res.json(updatedUser);
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).json({ message: "Error al actualizar el perfil de usuario" });
+    });
 });
 
 module.exports = router;

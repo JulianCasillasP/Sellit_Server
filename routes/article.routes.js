@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const Article = require('../models/Article.model');
+const { isAuthenticated } = require("../middleware/jwt.middleware.js");
 
 // CREATE ARTICLE
-router.post("/", (req, res, next) => {
+router.post("/", isAuthenticated, (req, res, next) => {
   const { title, description, price, condition, category } = req.body;
 
   Article.create({ title, description, price, condition, category })
@@ -14,7 +15,7 @@ router.post("/", (req, res, next) => {
 });
 
 // READ ARTICLES
-router.get("/", (req, res, next) => {
+router.get("/",  (req, res, next) => {
   Article.find()
     .then((articles) => {
       res.json(articles);
@@ -33,7 +34,7 @@ router.get("/:articleId", (req, res, next) => {
 });
 
 // UPDATE ARTICLE
-router.put("/:articleId", (req, res, next) => {
+router.put("/:articleId", isAuthenticated, (req, res, next) => {
   const { articleId } = req.params;
 
   Article.findByIdAndUpdate(articleId, req.body, { new: true })
@@ -44,7 +45,7 @@ router.put("/:articleId", (req, res, next) => {
 });
 
 // DELETE ARTICLE
-router.delete("/:articleId", (req, res, next) => {
+router.delete("/:articleId", isAuthenticated, (req, res, next) => {
   const { articleId } = req.params;
 
   Article.findByIdAndRemove(articleId)
