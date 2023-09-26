@@ -1,9 +1,9 @@
 const router = require("express").Router();
 const User = require("../models/User.model"); 
-const { isAuthenticated} = require("../middleware/jwt.middleware.js")
+
 
 // Ruta para obtener un perfil de usuario por su ID
-router.get("/:id",  isAuthenticated, (req, res) => {
+router.get("/:id", (req, res) => {
   const userId = req.params.id;
   User.findById(userId)
     .then((user) => {
@@ -20,7 +20,7 @@ router.get("/:id",  isAuthenticated, (req, res) => {
 
 
 // Ruta para actualizar el perfil de usuario por su ID
-router.put("/:id",  isAuthenticated, (req, res) => {
+router.put("/:id", (req, res) => {
   const userId = req.params.id;
   const updatedUserData = req.body; // Supongamos que el cuerpo de la solicitud contiene los nuevos datos del usuario
 

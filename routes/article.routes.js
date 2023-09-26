@@ -1,21 +1,34 @@
 const express = require('express');
 const router = express.Router();
 const Article = require('../models/Article.model');
-const { isAuthenticated } = require("../middleware/jwt.middleware.js");
+
+
 
 // CREATE ARTICLE
-router.post("/add", isAuthenticated, (req, res, next) => {
-  const { title, description, price, condition, category } = req.body;
+router.post("/add", (req, res, next) => {
+  const { name, description, price, condition, category } = req.body;
 
-  Article.create({ title, description, price, condition, category })
+  const newArticle = new Article({
+    name,
+    description,
+    price,
+    condition,
+    category
+  });
+
+  newArticle
+    .save()
     .then((article) => {
-      res.json(article);
+      res.status(201).json(article);
     })
-    .catch((err) => res.json(err));
+    .catch((error) => {
+      console.log(error)
+      res.status(500).json({ error: 'Error al crear un nuevo artículo' });
+    });
 });
 
 // READ ARTICLES
-router.get("/",  (req, res, next) => {
+router.get("/", (req, res, next) => {
   Article.find()
     .then((articles) => {
       res.json(articles);
@@ -34,7 +47,7 @@ router.get("/:articleId", (req, res, next) => {
 });
 
 // UPDATE ARTICLE
-router.put("/:articleId", isAuthenticated, (req, res, next) => {
+router.put("/:articleId", (req, res, next) => {
   const { articleId } = req.params;
 
   Article.findByIdAndUpdate(articleId, req.body, { new: true })
@@ -45,7 +58,7 @@ router.put("/:articleId", isAuthenticated, (req, res, next) => {
 });
 
 // DELETE ARTICLE
-router.delete("/:articleId", isAuthenticated, (req, res, next) => {
+router.delete("/:articleId", (req, res, next) => {
   const { articleId } = req.params;
 
   Article.findByIdAndRemove(articleId)

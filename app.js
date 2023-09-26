@@ -9,7 +9,7 @@ require("./db");
 // https://www.npmjs.com/package/express
 const express = require("express");
 const cors = require('cors'); // Importa la biblioteca CORS
-
+const { isAuthenticated} = require("../server/middleware/jwt.middleware")
 const app = express();
 
 // Configura CORS en tu aplicación
@@ -29,7 +29,7 @@ const articleRoutes = require("./routes/article.routes");
 app.use("/article", articleRoutes);
 
 const profileRoutes = require("./routes/profile.routes");
-app.use("/profile", profileRoutes);
+app.use("/profile", isAuthenticated, profileRoutes);
 
 // ❗ To handle errors. Routes that don't exist or errors that you handle in specific routes
 require("./error-handling")(app);

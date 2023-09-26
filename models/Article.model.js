@@ -8,7 +8,7 @@ const articleSchema = new mongoose.Schema({
     type: String,
     enum: ["new", "like new", "used"],
   },
-  seller: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  seller: { type: mongoose.Schema.Types.ObjectId, ref: "User"},
   category: {
     type: String,
     enum: ["clothes", "shoes", "jewels", "electronics"],
