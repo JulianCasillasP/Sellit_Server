@@ -4,7 +4,7 @@ const Article = require('../models/Article.model');
 const { isAuthenticated } = require("../middleware/jwt.middleware.js");
 
 // CREATE ARTICLE
-router.post("/", isAuthenticated, (req, res, next) => {
+router.post("/add", isAuthenticated, (req, res, next) => {
   const { title, description, price, condition, category } = req.body;
 
   Article.create({ title, description, price, condition, category })
