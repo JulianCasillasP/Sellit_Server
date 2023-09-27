@@ -7,6 +7,7 @@ const articleSchema = new mongoose.Schema({
   condition: {
     type: String,
     enum: ["new", "like new", "used"],
+    required: true,
   },
   seller: { type: mongoose.Schema.Types.ObjectId, ref: "User"},
   category: {
