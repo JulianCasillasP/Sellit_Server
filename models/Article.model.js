@@ -15,7 +15,7 @@ const articleSchema = new mongoose.Schema({
     enum: ["clothes", "shoes", "jewels", "electronics"],
     required: true,
   },
-  imageUrl: { type: String },
+  imageUrl: [String]
 });
 
 module.exports = mongoose.model("Article", articleSchema);
