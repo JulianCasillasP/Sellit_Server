@@ -9,11 +9,15 @@ require("./db");
 // https://www.npmjs.com/package/express
 const express = require("express");
 const cors = require('cors'); // Importa la biblioteca CORS
-const { isAuthenticated} = require("../server/middleware/jwt.middleware")
+const { isAuthenticated } = require("../server/middleware/jwt.middleware")
 const app = express();
 
 // Configura CORS en tu aplicación
 app.use(cors());
+
+// Aumenta el límite de carga del cuerpo de la solicitud a 50 MB (o el valor que desees)
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 // ℹ️ This function is getting exported from the config folder. It runs most pieces of middleware
 require("./config")(app);

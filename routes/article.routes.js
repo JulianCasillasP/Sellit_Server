@@ -6,14 +6,16 @@ const Article = require('../models/Article.model');
 
 // CREATE ARTICLE
 router.post("/add", (req, res, next) => {
-  const { name, description, price, condition, category } = req.body;
+  const { name, description, price, condition, category, imageUrl, seller } = req.body;
 
   const newArticle = new Article({
     name,
     description,
     price,
     condition,
-    category
+    category,
+    imageUrl,
+    seller
   });
 
   newArticle
@@ -28,18 +30,21 @@ router.post("/add", (req, res, next) => {
 });
 
 // READ ARTICLES
-router.get("/", (req, res, next) => {
+router.get("/", (req, res) => {
   Article.find()
-    .then((articles) => {
-      res.json(articles);
-    })
-    .catch((err) => res.json(err));
-});
+    .populate("seller") 
+    .then((response) => {
+      console.log(response)
+      res.status(200).json(response);
+    }).catch(err => res.json(err))
+  })
+
 
 router.get("/:articleId", (req, res, next) => {
   const { articleId } = req.params;
 
   Article.findById(articleId)
+  .populate("seller") 
     .then((article) => {
       res.json(article);
     })
