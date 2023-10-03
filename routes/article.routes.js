@@ -1,12 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const Article = require('../models/Article.model');
-
+const upload = require("../config/cloudinaryconfig")
 
 
 // CREATE ARTICLE
-router.post("/add", (req, res, next) => {
-  const { name, description, price, condition, category, imageUrl, seller } = req.body;
+router.post("/add", upload.single('image'), (req, res, next) => {
+  const { name, description, price, condition, category, seller } = req.body;
+
+  // La información del archivo cargado estará disponible en req.file
+  const imageUrl = req.file.path;
 
   const newArticle = new Article({
     name,
@@ -24,7 +27,7 @@ router.post("/add", (req, res, next) => {
       res.status(201).json(article);
     })
     .catch((error) => {
-      console.log(error)
+      console.log(error);
       res.status(500).json({ error: 'Error al crear un nuevo artículo' });
     });
 });
