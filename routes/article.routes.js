@@ -5,11 +5,10 @@ const upload = require("../config/cloudinaryconfig")
 
 
 // CREATE ARTICLE
-router.post("/add", upload.single('image'), (req, res, next) => {
-  const { name, description, price, condition, category, seller } = req.body;
+router.post("/add",upload.single('image'), (req, res, next) => {
+  const { name, description, price, condition, category, imageUrl, seller } = req.body;
+  console.log("Req.body:", req.body);
 
-  // La información del archivo cargado estará disponible en req.file
-  const imageUrl = req.file.path;
 
   const newArticle = new Article({
     name,
@@ -24,6 +23,7 @@ router.post("/add", upload.single('image'), (req, res, next) => {
   newArticle
     .save()
     .then((article) => {
+      console.log("Dentro del then", article)
       res.status(201).json(article);
     })
     .catch((error) => {
@@ -52,6 +52,20 @@ router.get("/:articleId", (req, res, next) => {
       res.json(article);
     })
     .catch((err) => res.json(err));
+});
+
+// Ruta para obtener artículos de un usuario específico
+router.get('/user/:userId', (req, res) => {
+  const userId = req.params.userId;
+
+  Article.find({ seller: userId })
+    .then((articles) => {
+      res.status(200).json(articles);
+    })
+    .catch((error) => {
+      console.error('Error al obtener artículos del usuario:', error);
+      res.status(500).json({ error: 'Error al obtener artículos del usuario' });
+    });
 });
 
 // UPDATE ARTICLE
