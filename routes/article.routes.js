@@ -1,16 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const Article = require('../models/Article.model');
-const upload = require("../config/cloudinaryconfig")
+const fileUploader = require("../config/cloudinaryconfig")
 
 
 // CREATE ARTICLE
-router.post("/add",upload.single('image'), (req, res, next) => {
-  const { name, description, price, condition, category, imageUrl, seller } = req.body;
+router.post("/add", fileUploader.single('image'), (req, res, next) => {
+  const { name, description, price, condition, category, seller } = req.body;
+  const imageUrl = req?.file?.path;
   console.log("Req.body:", req.body);
 
-
-  const newArticle = new Article({
+  Article.create({
     name,
     description,
     price,
@@ -18,12 +18,9 @@ router.post("/add",upload.single('image'), (req, res, next) => {
     category,
     imageUrl,
     seller
-  });
-
-  newArticle
-    .save()
+  })
     .then((article) => {
-      console.log("Dentro del then", article)
+      console.log("Dentro del then", article);
       res.status(201).json(article);
     })
     .catch((error) => {
