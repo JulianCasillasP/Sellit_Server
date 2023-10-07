@@ -32,8 +32,6 @@ app.use("/auth", authRoutes);
 const articleRoutes = require("./routes/article.routes");
 app.use("/article", articleRoutes);
 
-const profileRoutes = require("./routes/profile.routes");
-app.use("/profile", isAuthenticated, profileRoutes);
 
 // ❗ To handle errors. Routes that don't exist or errors that you handle in specific routes
 require("./error-handling")(app);
