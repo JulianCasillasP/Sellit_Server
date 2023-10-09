@@ -5,9 +5,9 @@ const fileUploader = require("../config/cloudinaryconfig")
 
 
 // CREATE ARTICLE
-router.post("/add", fileUploader.single('image'), (req, res, next) => {
+router.post("/add", fileUploader.single(`image`), (req, res, next) => {
   const { name, description, price, condition, category, seller } = req.body;
-  const imageUrl = req?.file?.path;
+  const image = req?.file?.path;
   console.log("Req.body:", req.body);
 
   Article.create({
@@ -16,7 +16,7 @@ router.post("/add", fileUploader.single('image'), (req, res, next) => {
     price,
     condition,
     category,
-    imageUrl,
+    image,
     seller
   })
     .then((article) => {
