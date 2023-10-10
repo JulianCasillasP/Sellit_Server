@@ -6,7 +6,6 @@ const userSchema = new Schema({
   password: { type: String, required: true },
   isAdmin: { type: Boolean, default: false },
   articles: [{ type: Schema.Types.ObjectId, ref: 'Article' }],
-  productsForSale: []
 });
 
 const User = model("User", userSchema);
