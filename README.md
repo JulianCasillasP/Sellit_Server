@@ -16,7 +16,7 @@ Este proyecto se divide en dos repositorios separados:
 
 El proyecto utiliza dos modelos principales para gestionar los datos:
 
-1. **Artículo**
+1. **Article**
 ```js
 const articleSchema = new Schema({
   name: { type: String, required: true },
@@ -24,17 +24,21 @@ const articleSchema = new Schema({
   price: { type: Number, required: true },
   condition: { type: String, required: true },
   seller: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  category: { type: String, enum: ['clothes', 'shoes', 'jewels', 'electronics'], required: true },
+  imageUrl: { type: String } 
 });
 ```
 
-2. **Usuario**
+2. **User**
 ```js
-   const userSchema = new Schema({
+  const userSchema = new Schema({
   username: { type: String, required: true },
   email: { type: String, unique: true, required: true },
   password: { type: String, required: true },
   orders: [{ type: Schema.Types.ObjectId, ref: 'Orden' }],
   isAdmin: { type: Boolean, default: false },
+  articles: [{ type: Schema.Types.ObjectId, ref: 'Article' }],
+  articleCategories: [{ type: String, enum: ['clothes', 'shoes', 'jewels', 'electronics'] }],
 });
 ```
 
