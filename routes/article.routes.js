@@ -1,14 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const Article = require('../models/Article.model');
-const fileUploader = require("../config/cloudinaryconfig")
-
+const fileUploader = require('../config/cloudinaryconfig');
 
 // CREATE ARTICLE
-router.post("/add", fileUploader.single(`image`), (req, res, next) => {
+router.post('/add', fileUploader.single('image'), (req, res, next) => {
   const { name, description, price, condition, category, seller } = req.body;
-  const image = req?.file?.path;
-  console.log("Req.body:", req.body);
+  const image = req.file ? req.file.path : null; // Corrige la obtención de la imagen
 
   Article.create({
     name,
@@ -17,10 +15,10 @@ router.post("/add", fileUploader.single(`image`), (req, res, next) => {
     condition,
     category,
     image,
-    seller
+    seller,
   })
     .then((article) => {
-      console.log("Dentro del then", article);
+      console.log('Dentro del then', article);
       res.status(201).json(article);
     })
     .catch((error) => {
@@ -30,21 +28,21 @@ router.post("/add", fileUploader.single(`image`), (req, res, next) => {
 });
 
 // READ ARTICLES
-router.get("/", (req, res) => {
+router.get('/', (req, res) => {
   Article.find()
-    .populate("seller") 
+    .populate('seller')
     .then((response) => {
-      console.log(response)
+      console.log(response);
       res.status(200).json(response);
-    }).catch(err => res.json(err))
-  })
+    })
+    .catch((err) => res.json(err));
+});
 
-
-router.get("/:articleId", (req, res, next) => {
+router.get('/:articleId', (req, res, next) => {
   const { articleId } = req.params;
 
   Article.findById(articleId)
-  .populate("seller") 
+    .populate('seller')
     .then((article) => {
       res.json(article);
     })
@@ -66,7 +64,7 @@ router.get('/user/:userId', (req, res) => {
 });
 
 // UPDATE ARTICLE
-router.put("/:articleId", (req, res, next) => {
+router.put('/:articleId', (req, res, next) => {
   const { articleId } = req.params;
 
   Article.findByIdAndUpdate(articleId, req.body, { new: true })
@@ -77,12 +75,12 @@ router.put("/:articleId", (req, res, next) => {
 });
 
 // DELETE ARTICLE
-router.delete("/:articleId", (req, res, next) => {
+router.delete('/:articleId', (req, res, next) => {
   const { articleId } = req.params;
 
   Article.findByIdAndRemove(articleId)
     .then(() => {
-      res.json({ message: "Se ha eliminado el artículo correctamente." });
+      res.json({ message: 'Se ha eliminado el artículo correctamente.' });
     })
     .catch((err) => res.json(err));
 });

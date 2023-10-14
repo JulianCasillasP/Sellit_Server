@@ -4,27 +4,48 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User.model");
 const { isAuthenticated } = require("../middleware/jwt.middleware.js");
+const multer = require("multer");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const cloudinary = require("cloudinary").v2;
 
 const saltRounds = 10;
 
-// POST /auth/signup  - Creates a new user in the database
-router.post("/signup", (req, res, next) => {
-  const { email, password, username, adminPassword } = req.body;
+// Configuración de Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_KEY,
+  api_secret: process.env.CLOUDINARY_SECRET
+});
 
-  // Check if email or password or username are provided as empty strings
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    allowed_formats: ["jpg", "png", "gif"],
+    folder: "profiles" // Ruta de almacenamiento en Cloudinary para imágenes de perfil
+  }
+});
+
+const upload = multer({ storage });
+
+// POST /auth/signup  - Crea un nuevo usuario en la base de datos
+router.post("/signup", upload.single("profileImage"), (req, res, next) => {
+  const { email, password, username, adminPassword } = req.body;
+  const profileImage = req.file.path; // Obtenemos la URL de la imagen de Cloudinary
+
+  // Comprueba si el correo electrónico, la contraseña o el nombre de usuario se proporcionan como cadenas vacías
   if (email === "" || password === "" || username === "") {
     res.status(400).json({ message: "Provide email, password, and username" });
     return;
   }
 
-  // This regular expression check that the email is of a valid format
+  // Comprueba si el correo electrónico tiene un formato válido
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
   if (!emailRegex.test(email)) {
     res.status(400).json({ message: "Provide a valid email address." });
     return;
   }
 
-  // This regular expression checks password for special characters and minimum length
+  // Comprueba la contraseña en busca de caracteres especiales y longitud mínima
   const passwordRegex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
   if (!passwordRegex.test(password)) {
     res.status(400).json({
@@ -44,34 +65,34 @@ router.post("/signup", (req, res, next) => {
       const salt = bcrypt.genSaltSync(saltRounds);
       const hashedPassword = bcrypt.hashSync(password, salt);
 
-      // Check if the admin password is correct
+      // Comprueba si la contraseña de administrador es correcta
       if (adminPassword === "4444") {
-        // If the admin password is correct, set isAdmin to true
+        // Si la contraseña de administrador es correcta, establece isAdmin en true
         const isAdmin = true;
 
-        User.create({ email, password: hashedPassword, username, isAdmin })
+        User.create({ email, password: hashedPassword, username, isAdmin, profileImage })
           .then((createdUser) => {
-            // Deconstruct the newly created user object to omit the password
+            // Descompone el objeto de usuario recién creado para omitir la contraseña
             const { email, username, _id } = createdUser;
 
-            // Create a new object that doesn't expose the password
-            const user = { email, username, _id };
+            // Crea un nuevo objeto que no expone la contraseña
+            const user = { email, username, _id, profileImage };
 
-            // Send a JSON response containing the user object
+            // Envía una respuesta JSON que contiene el objeto de usuario
             res.status(201).json({ user: user });
           })
           .catch((err) => next(err));
       } else {
-        // If the admin password is not correct, the user is not registered as an admin
-        User.create({ email, password: hashedPassword, username })
+        // Si la contraseña de administrador no es correcta, el usuario no se registra como administrador
+        User.create({ email, password: hashedPassword, username, profileImage })
           .then((createdUser) => {
-            // Deconstruct the newly created user object to omit the password
+            // Descompone el objeto de usuario recién creado para omitir la contraseña
             const { email, username, _id } = createdUser;
 
-            // Create a new object that doesn't expose the password
-            const user = { email, username, _id };
+            // Crea un nuevo objeto que no expone la contraseña
+            const user = { email, username, _id, profileImage };
 
-            // Send a JSON response containing the user object
+            // Envía una respuesta JSON que contiene el objeto de usuario
             res.status(201).json({ user: user });
           })
           .catch((err) => next(err));
@@ -80,11 +101,11 @@ router.post("/signup", (req, res, next) => {
     .catch((err) => next(err));
 });
 
-// POST  /auth/login - Verifies email and password and returns a JWT
+// POST  /auth/login - Verifica el correo electrónico y la contraseña y devuelve un JWT
 router.post("/login", (req, res, next) => {
   const { email, password } = req.body;
 
-  // Check if email or password are provided as empty string
+  // Comprueba si el correo electrónico o la contraseña se proporcionan como cadenas vacías
   if (email === "" || password === "") {
     res.status(400).json({ message: "Provide email and password." });
     return;
@@ -93,28 +114,28 @@ router.post("/login", (req, res, next) => {
   User.findOne({ email })
     .then((foundUser) => {
       if (!foundUser) {
-        // If the user is not found, send an error response
+        // Si el usuario no se encuentra, envía una respuesta de error
         res.status(401).json({ message: "User not found." });
         return;
       }
 
-      // Compare the provided password with the one saved in the database
+      // Compara la contraseña proporcionada con la almacenada en la base de datos
       const passwordCorrect = bcrypt.compareSync(password, foundUser.password);
 
       if (passwordCorrect) {
-        // Deconstruct the user object to omit the password
-        const { _id, email, username, isAdmin } = foundUser;
+        // Descompone el objeto de usuario para omitir la contraseña
+        const { _id, email, username, profileImage, isAdmin } = foundUser;
 
-        // Create an object that will be set as the token payload
-        const payload = { _id, email, username, isAdmin };
+        // Crea un objeto que se establecerá como el payload del token
+        const payload = { _id, email, username, profileImage, isAdmin };
 
-        // Create a JSON Web Token and sign it
+        // Crea un token JSON Web y lo firma
         const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
           algorithm: "HS256",
           expiresIn: "6h",
         });
 
-        // Send the token as the response
+        // Envía el token como respuesta
         res.status(200).json({ authToken: authToken });
       } else {
         res.status(401).json({ message: "Unable to authenticate the user" });
@@ -127,13 +148,9 @@ router.post("/logout", isAuthenticated, (req, res, next) => {
   res.status(200).json({ message: "Logout successful" });
 });
 
-// GET  /auth/verify  -  Used to verify JWT stored on the client
+// GET  /auth/verify  -  Se utiliza para verificar el JWT almacenado en el cliente
 router.get("/verify", isAuthenticated, (req, res, next) => {
-  // If JWT token is valid the payload gets decoded by the
-  // isAuthenticated middleware and is made available on `req.payload`
-  // console.log(`req.payload`, req.payload);
-
-  // Send back the token payload object containing the user data
+  // Si el token JWT es válido, el payload se descodifica mediante el middleware isAuthenticated y se pone a disposición en `req.payload`
   res.status(200).json(req.payload);
 });
 
