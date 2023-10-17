@@ -9,7 +9,7 @@ require("./db");
 // https://www.npmjs.com/package/express
 const express = require("express");
 const cors = require('cors'); // Importa la biblioteca CORS
-// const { isAuthenticated } = require("../server/middleware/jwt.middleware")
+const { isAuthenticated } = require("./middleware/jwt.middleware")
 const app = express();
 
 // Configura CORS en tu aplicación
