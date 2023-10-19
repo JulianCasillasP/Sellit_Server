@@ -18,27 +18,34 @@ El proyecto utiliza dos modelos principales para gestionar los datos:
 
 1. **Article**
 ```js
-const articleSchema = new Schema({
+const articleSchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: { type: String, required: true },
   price: { type: Number, required: true },
-  condition: { type: String, required: true },
-  seller: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  category: { type: String, enum: ['clothes', 'shoes', 'jewels', 'electronics'], required: true },
-  imageUrl: { type: String } 
+  condition: {
+    type: String,
+    enum: ["new", "like new", "used"],
+    required: true,
+  },
+  seller: { type: mongoose.Schema.Types.ObjectId, ref: "User"},
+  category: {
+    type: String,
+    enum: ["clothes", "shoes", "jewels", "electronics"],
+    required: true,
+  },
+  image: [String],
 });
 ```
 
 2. **User**
 ```js
   const userSchema = new Schema({
-  username: { type: String, required: true },
+  username: { type: String, unique: true, required: true },
   email: { type: String, unique: true, required: true },
   password: { type: String, required: true },
-  orders: [{ type: Schema.Types.ObjectId, ref: 'Orden' }],
   isAdmin: { type: Boolean, default: false },
+  profileImage: { type: String }, 
   articles: [{ type: Schema.Types.ObjectId, ref: 'Article' }],
-  articleCategories: [{ type: String, enum: ['clothes', 'shoes', 'jewels', 'electronics'] }],
 });
 ```
 
@@ -47,7 +54,7 @@ const articleSchema = new Schema({
 | Role  | Capabilities                                           | Property        |
 |-------|-------------------------------------------------------|-----------------|
 | User  | Can login/logout. Can read all the projects. Can create a new order. | isAdmin: false |
-| Admin | Can login/logout. Can read, edit, or delete all the projects. Can create a new project. Can read all user's orders and edit or delete them. | isAdmin: true  |
+| Admin | Can login/logout. Can read, edit, or delete all the articles. Can create a new article. | isAdmin: true  |
 
 ## API Reference
 
@@ -55,13 +62,13 @@ La API ofrece los siguientes endpoints y métodos:
 
 | Method | Endpoint                 | Requires                         | Response (200)          | Action                      |
 |--------|--------------------------|----------------------------------|--------------------------|-----------------------------|
-| GET    | `/articles`              | User authentication (user)        | List of articles         | Get list of articles        |
-| GET    | `/articles/:id`          | User authentication (user)        | Article details          | Get details of an article   |
-| POST   | `/articles`              | User authentication (user)        | New article created      | Create a new article        |
-| PUT    | `/articles/:id`          | User authentication (user)        | Updated article          | Update an article           |
-| DELETE | `/articles/:id`          | User authentication (user)        | Article deleted          | Delete an article           |
-| GET    | `/users/:id`             | Admin authentication (admin)      | User details             | Get details of a user       |
-| POST   | `/users/signup`          | -                                | User registered          | Register as a new user      |
-| POST   | `/users/login`           | -                                | Authentication successful | Log in                      |
-| POST   | `/users/logout`          | User authentication (user)        | Logout successful        | Log out                     |
+| GET    | `/article`              | User authentication (user)        | List of articles         | Get list of articles        |
+| GET    | `/article/:id`          | User authentication (user)        | Article details          | Get details of an article   |
+| POST   | `/article`              | User authentication (user)        | New article created      | Create a new article        |
+| PUT    | `/article/:id`          | User authentication (user)        | Updated article          | Update an article           |
+| DELETE | `/article/:id`          | User authentication (user)        | Article deleted          | Delete an article           |
+| GET    | `/auth/profile`             | Admin authentication (admin)      | User details             | Get details of a user       |
+| POST   | `/auth/signup`          | -                                | User registered          | Register as a new user      |
+| POST   | `/auth/login`           | -                                | Authentication successful | Log in                      |
+| POST   | `/auth/logout`          | User authentication (user)        | Logout successful        | Log out                     |
 
