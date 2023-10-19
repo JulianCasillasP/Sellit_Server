@@ -1,20 +1,20 @@
 # Sellit_Server
 
-# Proyecto de Venta de Artículos Usados
+# Used Items Sales Project
 
-Este proyecto de Venta de Artículos Usados es una aplicación web que permite a los usuarios comprar y vender artículos usados. Está compuesto por un frontend desarrollado en React y un backend que ofrece una API RESTful construida con Express y utiliza MongoDB/Mongoose para la gestión de datos.
+This Used Items Sales project is a web application that allows users to buy and sell used items. It consists of a frontend developed in React and a backend that provides a RESTful API built with Express and uses MongoDB/Mongoose for data management.
 
-## Repositorios
+## Repositories
 
-Este proyecto se divide en dos repositorios separados:
+This project is divided into two separate repositories:
 
- https://github.com/JulianCasillasP/Sellit_Client
+[Frontend Repository](https://github.com/JulianCasillasP/Sellit_Client)
 
- https://github.com/JulianCasillasP/Sellit_Server
+[Backend Repository](https://github.com/JulianCasillasP/Sellit_Server)
 
-## Modelos
+## Models
 
-El proyecto utiliza dos modelos principales para gestionar los datos:
+The project uses two main models to manage data:
 
 1. **Article**
 ```js
@@ -35,7 +35,7 @@ const articleSchema = new mongoose.Schema({
   },
   image: [String],
 });
-```
+
 
 2. **User**
 ```js
@@ -58,7 +58,7 @@ const articleSchema = new mongoose.Schema({
 
 ## API Reference
 
-La API ofrece los siguientes endpoints y métodos:
+The API provides the following endpoints and methods:
 
 | Method | Endpoint                 | Requires                         | Response (200)          | Action                      |
 |--------|--------------------------|----------------------------------|--------------------------|-----------------------------|
