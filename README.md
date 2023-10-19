@@ -49,7 +49,7 @@ const articleSchema = new mongoose.Schema({
 });
 ```
 
-## user roles
+## User roles
 
 | Role  | Capabilities                                           | Property        |
 |-------|-------------------------------------------------------|-----------------|
